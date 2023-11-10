@@ -55,4 +55,7 @@ fat 1 = 1
 fat n = n * fat (n-1)
 
 potencia :: Int -> Int -> Int
-potencia a b = a * potencia a (b - 1)
+potencia a b
+    | b == 0 = 1
+    | a == 0 = 0
+    |otherwise = a * potencia a (b - 1)
