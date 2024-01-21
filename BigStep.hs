@@ -208,3 +208,41 @@ fatorial = (Seq (Atrib (Var "y") (Num 1))
                             (Atrib (Var "x") (Sub (Var "x") (Num 1))))))
 
 -- exemplo programas:
+exMemoria :: Memoria
+exMemoria = [("equal", 0), ("value1", 0), ("value2", 0)]
+
+equalAtrib :: C
+equalAtrib = CondAtrib (Igual (Var "value1") (Var "value2")) (Var "equal") (Var "value1") (Var "value2")
+
+
+
+exMemoria2 :: Memoria
+exMemoria2 = [("counter", 0), ("maxValue", 0)]
+
+maxValue :: C
+maxValue = Seq
+             (Atrib (Var "maxValue") (Num 20))
+             (While (Not (Igual (Var "maxValue") (Var "counter")))
+                    (Atrib (Var "counter") (Soma (Var "counter") (Num 1))))
+
+-- loop
+exMemoriaLoop :: Memoria
+exMemoriaLoop = [("counter", 0), ("limit", 5)]
+
+loopExample :: C
+loopExample = Seq
+                (Atrib (Var "counter") (Num 0))
+                (While (Leq (Var "counter") (Var "limit"))
+                       (Seq
+                          (Atrib (Var "counter") (Soma (Var "counter") (Num 1)))
+                          (Atrib (Var "value1") (Soma (Var "value1") (Num 1)))
+                       )
+                )
+
+--dupla atribuição
+exMemoriaDupla :: Memoria
+exMemoriaDupla = [("x", 3), ("y", 5), ("resultX", 0), ("resultY", 0)]
+
+duplaAtribuicaoExample :: C
+duplaAtribuicaoExample = DAtrrib (Var "resultX") (Var "resultY") (Soma (Var "x") (Num 2)) (Sub (Var "y") (Num 1))
+
