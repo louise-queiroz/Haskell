@@ -135,10 +135,10 @@ cbigStep (RepeatUntil c b, s) =
         then (Skip, s')
         else let (c', s'') = cbigStep (RepeatUntil c b, s')
              in (c', s'')
-cbigStep (CondAtrib b (Var x) e2 e3, s) =
-    if bbigStep (b, s)
-        then (Atrib (Var x) e2, s)
-        else (Atrib (Var x) e3, s)
+cbigStep (CondAtrib b (Var x) e1 e2, s) =
+    let valX = if bbigStep (b, s) then ebigStep (e1, s) else ebigStep (e2, s)
+    in (Skip, mudaVar s x valX)
+    
 cbigStep (Swap (Var x) (Var y), s) =
     let valX = procuraVar s x
         valY = procuraVar s y
@@ -209,27 +209,17 @@ fatorial = (Seq (Atrib (Var "y") (Num 1))
 
 -- exemplo programas:
 exMemoria :: Memoria
-exMemoria = [("equal", 0), ("value1", 0), ("value2", 0)]
+exMemoria = [("equal", 0), ("value1", 1), ("value2", 2)]
 
-equalAtrib :: C
+equalAtrib :: C --equal recebe o valor da variavel value1 se value1 e value2 forem iguais 
 equalAtrib = CondAtrib (Igual (Var "value1") (Var "value2")) (Var "equal") (Var "value1") (Var "value2")
 
 
-
-exMemoria2 :: Memoria
-exMemoria2 = [("counter", 0), ("maxValue", 0)]
-
-maxValue :: C
-maxValue = Seq
-             (Atrib (Var "maxValue") (Num 20))
-             (While (Not (Igual (Var "maxValue") (Var "counter")))
-                    (Atrib (Var "counter") (Soma (Var "counter") (Num 1))))
-
 -- loop
 exMemoriaLoop :: Memoria
-exMemoriaLoop = [("counter", 0), ("limit", 5)]
+exMemoriaLoop = [("counter", 0), ("limit", 5)] 
 
-loopExample :: C
+loopExample :: C -- incrementa o contador até o tamanho máximo definido em limit
 loopExample = Seq
                 (Atrib (Var "counter") (Num 0))
                 (While (Leq (Var "counter") (Var "limit"))
@@ -243,6 +233,8 @@ loopExample = Seq
 exMemoriaDupla :: Memoria
 exMemoriaDupla = [("x", 3), ("y", 5), ("resultX", 0), ("resultY", 0)]
 
-duplaAtribuicaoExample :: C
+duplaAtribuicaoExample :: C --troca e soma 1 no Y
 duplaAtribuicaoExample = DAtrrib (Var "resultX") (Var "resultY") (Soma (Var "x") (Num 2)) (Sub (Var "y") (Num 1))
 
+
+--let (_, resultadoMemoria) = cbigStep (fatorial, exSigma)
