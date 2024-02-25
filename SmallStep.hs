@@ -214,8 +214,8 @@ isFinalC _       = False
 
 -- Descomentar quando a função smallStepC estiver implementada:
 
---interpretadorC :: (C,Memoria) -> (C, Memoria)
---interpretadorC (c,s) = if (isFinalC c) then (c,s) else interpretadorC (smallStepC (c,s))
+interpretadorC :: (C,Memoria) -> (C, Memoria)
+interpretadorC (c,s) = if (isFinalC c) then (c,s) else interpretadorC (smallStepC (c,s))
 
 
 --------------------------------------
@@ -286,10 +286,20 @@ fatorial = (Seq (Atrib (Var "y") (Num 1))
                             (Atrib (Var "x") (Sub (Var "x") (Num 1))))))
 
 ------ EXEMPLOS
--- LOOP
+-- LOOP x até que x > 5
+programa1 :: C
+programa1 = While (Leq (Var "x") (Num 5))
+                    (Atrib (Var "x") (Soma (Var "x") (Num 1)))
+
 
 --DA
--- DO WHILE
+programa2 :: C
+programa2 = DAtrrib (Var "x") (Var "y") (Soma (Var "x") (Num 2)) (Mult (Var "y") (Num 3))
+
+
+
+
+-- DO WHILE Do (x=x+1) while (x<=5)
 programa3 :: C
 programa3 = DoWhile (Atrib (Var "x") (Soma (Var "x") (Num 1)))
                     (Leq (Var "x") (Num 5))
