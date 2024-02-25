@@ -124,11 +124,10 @@ cbigStep (If b c1 c2, s)
     | bbigStep (b, s) = cbigStep (c1, s)
     | otherwise = cbigStep (c2, s)
 cbigStep (Seq c1 c2, s) =
-    let (c1n, sn) = cbigStep (c1, s)
-    in cbigStep (c2, sn)
-cbigStep (Atrib (Var x) e, s) =
-    let en = ebigStep (e, s)
-    in (Skip, mudaVar s x en)
+    let (c1', s') = cbigStep (c1, s)
+    in cbigStep (c2, s')
+cbigStep (Atrib (Var x) e, s) = 
+    (Skip, mudaVar s x (ebigStep (e, s)))
 cbigStep (RepeatUntil c b, s) =
     let (_, s') = cbigStep (c, s)
     in if bbigStep (b, s')
@@ -149,7 +148,12 @@ cbigStep (DAtrrib (Var x) (Var y) e1 e2, s) =
         valY = ebigStep (e2, s)
         newSigma = mudaVar (mudaVar s x valX) y valY
     in (Skip, newSigma)
-cbigStep (c, s) = (c, s)
+cbigStep (While b c, s) = cbigStep((If b (Seq c (While b c)) Skip, s))
+    --cbigStep (c, s)
+--cbigStep (c, s) = (c, s)
+
+
+
 
 --------------------------------------
 ---
